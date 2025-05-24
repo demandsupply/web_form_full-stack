@@ -3,3 +3,33 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+body {
+    padding: 30px;
+    width: 600px;
+    margin: auto;
+}
+
+.container {
+    width: 450px;
+    background-color: rgb(219, 245, 245);
+    padding: 20px 50px;
+    margin: auto;
+}
+
+.form-control:invalid,
+.form-select:invalid {
+    box-shadow: none;
+}
+
+.provincia-valida,
+.comune-valido,
+#popup,
+#overlay {
+    display: none;
+}
+
+table th, 
+table td {
+    font-size: 0.9rem;
+}
