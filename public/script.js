@@ -1,6 +1,7 @@
 const form = document.getElementById("userForm");
 const submitBtn = document.getElementById("submitBtn");
 let validAge = false;
+let provinciaScelta;
 
 // un oggetto campi che contengono le regex per validare i campi
 const campi = {
@@ -124,4 +125,74 @@ function validateComune() {
     select.classList.add("is-valid");
     return true;
   }
+}
+
+// Popola la select province da JSON esterno
+fetch("comuni.json")
+  .then((response) => response.json())
+  .then((province) => {
+    const select = document.getElementById("provincia");
+    const regioni = province.regioni;
+    const arrayProvince = [];
+
+    for (let regione of regioni) {
+      for (let provincia of regione.province) {
+        arrayProvince.push({
+          nome: provincia.nome,
+          sigla: provincia.code,
+        });
+      }
+    }
+
+    // ordina le province in ordine alfabetico
+    arrayProvince.sort((a, b) => a.nome.localeCompare(b.nome));
+
+    arrayProvince.forEach((provincia) => {
+      const option = document.createElement("option");
+      option.value = provincia.sigla;
+      option.textContent = `${provincia.nome} (${provincia.sigla})`;
+      select.appendChild(option);
+    });
+  })
+  .catch((error) => {
+    console.error("Errore nel caricamento province:", error);
+  });
+
+// popola la select comuni in base alla provincia selezionata
+function caricaComuni(provinciaScelta) {
+  fetch("comuni.json")
+    .then((response) => response.json())
+    .then((comuniJson) => {
+      const select = document.getElementById("comune");
+
+      // pulisci la lista dei comuni ogni volta che viene selezionata una nuova provincia
+      select.innerHTML = "";
+
+      const regioni = comuniJson.regioni;
+
+      for (let regione of regioni) {
+        for (let provincia of regione.province) {
+          if (provincia.code === provinciaScelta) {
+            console.log("provincia " + provincia.code + " trovata");
+            const selezionaCom = document.createElement("option");
+            selezionaCom.value = "";
+            selezionaCom.textContent = "seleziona il comune";
+            select.appendChild(selezionaCom);
+
+            for (let comune of provincia.comuni) {
+              const option = document.createElement("option");
+              option.value = comune.nome;
+              option.textContent = comune.nome;
+              select.appendChild(option);
+            }
+
+            return;
+          }
+        }
+      }
+    })
+
+    .catch((error) => {
+      console.error("Errore nel caricamento province:", error);
+    });
 }
