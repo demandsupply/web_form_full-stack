@@ -196,3 +196,17 @@ function caricaComuni(provinciaScelta) {
       console.error("Errore nel caricamento province:", error);
     });
 }
+
+
+
+document.getElementById("provincia").addEventListener("change", () => {
+  if (validateProvincia()) {
+    caricaComuni(provinciaScelta);
+  }
+  checkFormValid();
+});
+
+document.getElementById("comune").addEventListener("change", () => {
+  validateComune();
+  checkFormValid();
+});
