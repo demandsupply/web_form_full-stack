@@ -198,6 +198,25 @@ function caricaComuni(provinciaScelta) {
 }
 
 
+function checkFormValid() {
+  const validCampi = Object.keys(campi).every((id) => validateCampo(id));
+  const validProv = validateProvincia();
+  const validCom = validateComune();
+
+  submitBtn.disabled = !(validCampi && validProv && validCom && validAge);
+}
+
+Object.keys(campi).forEach((id) => {
+  const input = document.getElementById(id);
+  if (input === "nascita") {
+    input.addEventListener("change", checkAge);
+  } else {
+    input.addEventListener("input", () => {
+      validateCampo(id);
+      checkFormValid();
+    });
+  }
+});
 
 document.getElementById("provincia").addEventListener("change", () => {
   if (validateProvincia()) {
