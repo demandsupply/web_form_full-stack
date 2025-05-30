@@ -1,5 +1,8 @@
 const form = document.getElementById("userForm");
 const submitBtn = document.getElementById("submitBtn");
+const popupMessage = document.getElementById("popup");
+const overlay = document.getElementById("overlay");
+const btnOk = document.getElementById("btnOk");
 let validAge = false;
 let provinciaScelta;
 
@@ -229,3 +232,17 @@ document.getElementById("comune").addEventListener("change", () => {
   validateComune();
   checkFormValid();
 });
+
+// resetta tutti i campi del form e ripristina variabili di controllo al valore originale
+function resetForm() {
+  form.reset();
+  validAge = false;
+  submitBtn.disabled = true;
+
+  document
+    .querySelectorAll(".is-valid, .is-invalid")
+    .forEach((el) => el.classList.remove("is-valid", "is-invalid"));
+
+  popupMessage.style.display = "none";
+  overlay.style.display = "none";
+}
