@@ -246,3 +246,38 @@ function resetForm() {
   popupMessage.style.display = "none";
   overlay.style.display = "none";
 }
+
+
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+
+  // crea oggetto contenente i dati del form da inviare al server
+  const formData = {};
+  Object.keys(campi).forEach((id) => {
+    const input = document.getElementById(id);
+    input.value = sanitize(input.value);
+    formData[id] = document.getElementById(id).value;
+  });
+  formData["provincia"] = document.getElementById("provincia").value;
+  formData["comune"] = document.getElementById("comune").value;
+
+  console.log(formData);
+
+  // invia l'oggetto al server
+  fetch("/submit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(formData),
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      console.log("risposta server", data);
+      // alert("dati inviati con successo!");
+    })
+    .catch((err) => console.error("errore: ", err));
+
+  popupMessage.style.display = "block";
+  overlay.style.display = "block";
+});
+
+btnOk.addEventListener("click", resetForm);
