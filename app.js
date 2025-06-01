@@ -10,6 +10,18 @@ const {body, validationResult } = require('express-validator');
 const port = 3000;
 const server = express();
 
+
+// usa il middleware "express.json()" per interpretare correttamente i JSON ricevuti
+server.use(express.json())
+
+// usa il middleware "express.static" per servire i file statici dalla cartella specificata
+server.use(express.static(path.join(__dirname, 'public')));
+
+// crea db per salvataggio dati form
+db.run("CREATE TABLE IF NOT EXISTS data (nome TEXT, cognome TEXT, indirizzo TEXT, cf TEXT, nascita TEXT, provincia TEXT, comune TEXT, cellulare TEXT, email TEXT)")
+
+
+
 // avvia server
 server.listen(port, (err) => {
     if (err) {
