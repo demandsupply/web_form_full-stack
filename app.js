@@ -25,7 +25,42 @@ server.get('/', (req, res) => {
 });
 
 server.post('/submit',
+
+    // crea validazione lato backend
+    [
+        body("nome").matches(/^[a-zA-Zàèéìòù' ]{2,30}$/),
+        body("cognome").matches(/^[a-zA-Zàèéìòù' ]{2,30}$/),
+        body("nascita")
+        .isISO8601()
+        .custom((value) => {
+            const today = new Date().toISOString().split("T")[0];
+            if (value > today) throw new Error("Data futura non valida");
+
+            const nascita = new Date(value);
+            const oggi = new Date();
+            const anni = oggi.getFullYear() - nascita.getFullYear();
+            const m = oggi.getMonth() - nascita.getMonth();
+            const maggiorenne =
+            anni > 18 ||
+            (anni === 18 &&
+                (m > 0 || (m === 0 && oggi.getDate() >= nascita.getDate())));
+            if (!maggiorenne) throw new Error("Utente minorenne");
+            return true;
+        }),
+        body("cellulare").matches(/^\d{10}$/),
+        body("indirizzo").matches(/^[\w\s.,àèéìòù-]{5,50}$/),
+        body("cf").matches(/^[A-Z]{6}[0-9]{2}[A-EHLMPR-T][0-9]{2}[A-Z][0-9]{3}[A-Z]$/i),
+        body("email").isEmail(),
+        body("provincia").notEmpty(),
+        body("comune").notEmpty(),
+    ],
     (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        console.log("errori di validazione:", errors.array());
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     const formData = req.body;
     console.log("dati ricevuti: ", formData)
 
