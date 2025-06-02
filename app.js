@@ -20,6 +20,36 @@ server.use(express.static(path.join(__dirname, 'public')));
 // crea db per salvataggio dati form
 db.run("CREATE TABLE IF NOT EXISTS data (nome TEXT, cognome TEXT, indirizzo TEXT, cf TEXT, nascita TEXT, provincia TEXT, comune TEXT, cellulare TEXT, email TEXT)")
 
+server.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+server.post('/submit',
+    (req, res) => {
+    const formData = req.body;
+    console.log("dati ricevuti: ", formData)
+
+    // inserisci i dati del form nel db
+    db.serialize(() => {
+        const stmt = db.prepare(
+            "INSERT INTO data VALUES ($nome, $cognome, $indirizzo, $cf, $nascita, $provincia, $comune, $cellulare, $email)",
+            {
+                $nome: formData.nome,
+                $cognome: formData.cognome,
+                $indirizzo: formData.indirizzo,
+                $cf: formData.cf,
+                $nascita: formData.nascita,
+                $provincia: formData.provincia,
+                $comune: formData.comune,
+                $cellulare: formData.cellulare,
+                $email: formData.email,
+            }
+        );
+        stmt.run()
+        stmt.finalize()
+    })
+
+});
 
 
 // avvia server
