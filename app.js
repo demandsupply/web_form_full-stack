@@ -6,6 +6,7 @@ const nodemailer = require('nodemailer');
 const { text } = require('body-parser');
 const {body, validationResult } = require('express-validator');
 
+require('dotenv').config();
 
 const port = 3000;
 const server = express();
@@ -19,6 +20,17 @@ server.use(express.static(path.join(__dirname, 'public')));
 
 // crea db per salvataggio dati form
 db.run("CREATE TABLE IF NOT EXISTS data (nome TEXT, cognome TEXT, indirizzo TEXT, cf TEXT, nascita TEXT, provincia TEXT, comune TEXT, cellulare TEXT, email TEXT)")
+
+// gestione mail
+// configurazione nodemailer
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
 
 server.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
