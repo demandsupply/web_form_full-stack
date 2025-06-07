@@ -96,6 +96,53 @@ server.post('/submit',
         stmt.finalize()
     })
 
+    // crea dati e contenuto delle mail da inviare 
+    const mailToSystem = {
+        from: 'giovanni.zol.24@stud.itsaltoadriatico.it',
+        to: 'giovanni.zol.24@stud.itsaltoadriatico.it',
+        subject: 'Nuovo form ricevuto',
+        text: `
+            Ciao sistema, è appena stato compilato un nuovo form.
+            
+            Ecco i dati inseriti:
+
+            Nome: ${formData.nome}
+            Cognome: ${formData.cognome}
+            Indirizzo: ${formData.indirizzo}
+            CF: ${formData.cf}
+            Nascita: ${formData.nascita}
+            Provincia: ${formData.provincia}
+            Comune: ${formData.comune}
+            Cellulare: ${formData.cellulare}
+            Email: ${formData.email}
+
+        `
+    };
+
+    const mailToUser = {
+        from: 'giovanni.zol.24@stud.itsaltoadriatico.it',
+        to: formData.email,
+        subject: 'Nuovo form inviato',
+        text: `
+            Ciao ${formData.nome}, questa è una mail di notifica per avvisarti che la compilazione del form è andata a buon fine.
+            
+            Ecco un riassunto dei dati inseriti:
+
+            Nome: ${formData.nome}
+            Cognome: ${formData.cognome}
+            Indirizzo: ${formData.indirizzo}
+            CF: ${formData.cf}
+            Nascita: ${formData.nascita}
+            Provincia: ${formData.provincia}
+            Comune: ${formData.comune}
+            Cellulare: ${formData.cellulare}
+            Email: ${formData.email}
+
+            Questi dati sono stati inseriti nel nostro database. 
+            Grazie per aver compilato il form!
+        `
+    };
+
 });
 
 
