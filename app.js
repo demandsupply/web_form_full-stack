@@ -143,6 +143,27 @@ server.post('/submit',
         `
     };
 
+    // invio delle mail
+    transporter.sendMail(mailToSystem, (error, info) => {
+        if (error) {
+            console.error("errore nell'invio della mail ", error);
+            return res.status(500).json({ message: "mail non inviata al sistema"});
+        }
+
+        console.log("mail inviata al sistema ", info.response);
+
+        transporter.sendMail(mailToUser, (error2, info2) => {
+            if (error2) {
+                console.error("errore nell'invio della mail ", error2);
+                return res.status(500).json({ message: "mail non inviata all'utente"});
+            }
+
+        console.log("mail inviata all'utente ", info2.response);
+        return res.status(200).json({ message: "mail inviata al sistema e all'utente con successo"});
+        });
+    });
+    
+
 });
 
 
